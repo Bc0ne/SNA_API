@@ -1,6 +1,5 @@
 ﻿namespace SocialNetworkAnalyser.API.Bootstraper
 {
-    using System;
     using Autofac;
     using Microsoft.AspNetCore.Hosting;
     using SocialNetworkAnaylser.Data.Context;

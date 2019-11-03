@@ -1,17 +1,19 @@
-﻿namespace SocialNetworkAnalyser.API.Friendship
+﻿namespace SocialNetworkAnalyser.API.Dataset
 {
+    using System.IO;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
-    using System.IO;
-    using SocialNetworkAnaylser.Core.Friendship;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Routing;
     using SocialNetworkAnaylser.Core.Dataset;
     using SocialNetworkAnalyser.Web.Models.Dataset;
+    using SocialNetworkAnaylser.Core.Friendship;
+    using AutoMapper;
+    using SocialNetworkAnalyser.Web.Models;
 
-    [ApiController]
     [Route("api/datasets")]
+    [ApiController]
     public class DatasetController : Controller
     {
         private readonly IDatasetRepository _datasetRepository;
@@ -23,50 +25,37 @@
             _friendShipRepository = friendshipRepository;
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetAllDatasetsAsync()
         {
             var datasets = await _datasetRepository.GetAllDatasetsAsync();
 
-            var result = new List<DatasetCreationOutputModel>();
+            var result = Mapper.Map<List<DatasetOutputModel>>(datasets);
 
-            foreach(var dataset in datasets)
-            {
-                result.Add(new DatasetCreationOutputModel
-                {
-                    Id = dataset.Id,
-                    Name = dataset.Name,
-                    CreationTime = dataset.CreationTime,
-                    IsImported = dataset.IsImported
-                });
-            }
-
-            return Ok(result);
+            return Ok(ResponseResult.SucceededWithData(result));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}/users")]
         public async Task<IActionResult> GetAllUsersByDatasetIdAsync(long id)
         {
             var dataset = await _datasetRepository.GetDatasetByIdAsync(id);
 
             if (dataset == null)
             {
-                return NotFound($"There is no dataset by id: {id}");
+                return NotFound(ResponseResult.Failed(ErrorCode.Error, "Dataset isn't found."));
             }
 
-            var result = await _friendShipRepository.GetUsersCountByDatasetIdAsync(id);
+            //ToDo: if the dataset isn't imported yet.
 
-            var datasetUsersOutputModel = new List<DatasetUsersOutputModel>();
+            var users = await _friendShipRepository.GetAllUsersByDatasetIdAsync(id);
 
-            foreach(var user in result)
+            var result = new DatasetUsersOutputModel
             {
-                datasetUsersOutputModel.Add(new DatasetUsersOutputModel
-                {
-                    UserId = user.Key,
-                    NumOfFriends = user.Value
-                });
-            }
+                Dataset = Mapper.Map<DatasetOutputModel>(dataset),
+                Users = Mapper.Map<List<UserOutputModel>>(users)
+            };
 
-            return Ok(datasetUsersOutputModel);
+            return Ok(ResponseResult.SucceededWithData(result));
         }
 
         [HttpPost]
@@ -74,42 +63,36 @@
         {
             if (string.IsNullOrEmpty(model.Name))
             {
-                return BadRequest("Dataset name can't be empty.");
+                return BadRequest(ResponseResult.Failed(ErrorCode.ValidationError, "Dataset name can't be empty."));
             }
 
             var dataset = Dataset.New(model.Name);
 
             await _datasetRepository.AddDatasetAsync(dataset);
 
-            var datasetCreationOutputModel = new DatasetCreationOutputModel
-            {
-                Id = dataset.Id,
-                Name = dataset.Name,
-                IsImported = dataset.IsImported,
-                CreationTime = dataset.CreationTime
-            };
+            var result = Mapper.Map<DatasetOutputModel>(dataset);
 
-            return Ok(datasetCreationOutputModel);
+            return Ok(ResponseResult.SucceededWithData(result));
         }
 
-        [HttpPost("{id}/upload")]
-        public async Task<IActionResult> UploadFriendshipDatasetAsync(long id, IFormFile file)
+        [HttpPost("{id}/data")]
+        public async Task<IActionResult> UploadDataByDatasetIdAsync(long id, IFormFile file)
         {
             if (file == null)
             {
-                return BadRequest("File can't be null.");
+                return BadRequest(ResponseResult.Failed(ErrorCode.ValidationError, "File can't be empty."));
             }
 
             var dataset = await _datasetRepository.GetDatasetByIdAsync(id);
 
             if (dataset == null)
             {
-                return NotFound($"There is no dataset by id: {id}");
+                return NotFound(ResponseResult.Failed(ErrorCode.Error, "Dataset isn't found."));
             }
 
             if (dataset.IsImported)
             {
-                return BadRequest($"Dataset can't be imported more than once.");
+                return BadRequest(ResponseResult.Failed(ErrorCode.Error, "Dataset can't be imported more than once."));
             }
 
             var friendships = new List<Friendship>();
@@ -130,7 +113,7 @@
 
             await _datasetRepository.UpdateDatasetAsync(dataset);
 
-            return Ok();
+            return Ok(ResponseResult.Succeeded());
         }
     }
 }

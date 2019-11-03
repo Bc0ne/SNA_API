@@ -1,8 +1,8 @@
-﻿using System;
-
-namespace SocialNetworkAnalyser.Web.Models.Dataset
+﻿namespace SocialNetworkAnalyser.Web.Models.Dataset
 {
-    public class DatasetCreationOutputModel
+    using System;
+
+    public class DatasetOutputModel
     {
         public long Id { get; set; }
         public string Name { get; set; }

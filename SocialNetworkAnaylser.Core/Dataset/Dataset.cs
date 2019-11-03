@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Core.Friendship;
 
-    public class Dataset : DomainEntity
+     public class Dataset : DomainEntity
     {
         public string Name { get; private set; }
         public bool IsImported { get; private set; }

@@ -1,6 +1,7 @@
 ﻿namespace SocialNetworkAnaylser.Data.Repositories
 {
     using Microsoft.EntityFrameworkCore;
+    using SocialNetworkAnaylser.Core;
     using SocialNetworkAnaylser.Core.Friendship;
     using SocialNetworkAnaylser.Data.Context;
     using System;
@@ -23,7 +24,7 @@
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Dictionary<long, int>> GetUsersCountByDatasetIdAsync(long datasetId)
+        public async Task<IEnumerable<UserAnalyze>> GetAllUsersByDatasetIdAsync(long datasetId)
         {
             var users = await (from UserTbl in (
                    ((
@@ -55,13 +56,13 @@
                          } into g
                          orderby
                          g.Key.PersonId1
-                         select new
+                         select new UserAnalyze
                          {
-                             g.Key.PersonId1,
-                             Count = g.Count()
+                             UserId = g.Key.PersonId1,
+                             NumOfFriends = g.Count()
                          };
 
-            return result.ToDictionary(x => x.PersonId1, y=> y.Count);
+            return result;
         }
     }
 }
