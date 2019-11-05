@@ -14,8 +14,8 @@
                  "SocialNetworkAnalyser.API"
             };
 
+            Mapper.Reset();
             Mapper.Initialize(cfg => cfg.AddProfiles(profiles));
-
             Mapper.AssertConfigurationIsValid();
         }
     }

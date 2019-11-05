@@ -20,5 +20,11 @@
                 CreationTime = DateTime.Now
             };
         }
+
+        public void Delete()
+        {
+            DeletionTime = DateTime.Now;
+            IsDeleted = true;
+        }
     }
 }

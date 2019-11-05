@@ -16,6 +16,7 @@
     [ApiController]
     public class DatasetController : Controller
     {
+
         private readonly IDatasetRepository _datasetRepository;
         private readonly IFriendshipRepository _friendShipRepository;
 
@@ -45,15 +46,31 @@
                 return NotFound(ResponseResult.Failed(ErrorCode.Error, "Dataset isn't found."));
             }
 
-            //ToDo: if the dataset isn't imported yet.
 
-            var users = await _friendShipRepository.GetAllUsersByDatasetIdAsync(id);
+            var users = await _friendShipRepository.GetAllUniqueUsersWithFriendsCountByDatasetIdAsync(id);
 
             var result = new DatasetUsersOutputModel
             {
                 Dataset = Mapper.Map<DatasetOutputModel>(dataset),
                 Users = Mapper.Map<List<UserOutputModel>>(users)
             };
+
+            return Ok(ResponseResult.SucceededWithData(result));
+        }
+
+        [HttpGet("{id}/friendships")]
+        public async Task<IActionResult> GetAllFriendshipsByDatasetIdAsync(long id)
+        {
+            var dataset = await _datasetRepository.GetDatasetByIdAsync(id);
+
+            if (dataset == null)
+            {
+                return NotFound(ResponseResult.Failed(ErrorCode.Error, "Dataset isn't found."));
+            }
+
+            var friendships = await _friendShipRepository.GetAllFriendshipsByDatasetIdAsync(id);
+
+            var result = Mapper.Map<List<FriendshipOutputModel>>(friendships);
 
             return Ok(ResponseResult.SucceededWithData(result));
         }
@@ -109,11 +126,36 @@
 
             await _friendShipRepository.AddDataAsync(friendships);
 
-            dataset.UpdateDateset();
+            dataset.Update();
 
             await _datasetRepository.UpdateDatasetAsync(dataset);
 
             return Ok(ResponseResult.Succeeded());
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDatasetByIdAsync(long id)
+        {
+            var dataset = await _datasetRepository.GetDatasetByIdAsync(id);
+
+            if (dataset == null)
+            {
+                return NotFound(ResponseResult.Failed(ErrorCode.Error, "Dataset isn't found."));
+            }
+
+            var friendships = await _friendShipRepository.GetAllFriendshipsByDatasetIdAsync(id);
+
+            foreach(var fs in friendships)
+            {
+                fs.Delete();
+            }
+
+            dataset.Delete();
+
+            await _datasetRepository.UpdateDatasetAsync(dataset);
+            await _friendShipRepository.UpdateListOfFriendshipsAsync(friendships);
+
+            return Ok();
         }
     }
 }

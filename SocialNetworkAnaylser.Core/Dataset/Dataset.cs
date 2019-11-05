@@ -19,9 +19,15 @@
             };
         }
 
-        public void UpdateDateset()
+        public void Update()
         {
             IsImported = true;
+        }
+
+        public void Delete()
+        {
+            DeletionTime = DateTime.Now;
+            IsDeleted = true;
         }
     }
 }

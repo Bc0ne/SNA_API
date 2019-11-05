@@ -24,7 +24,13 @@
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<UserAnalyze>> GetAllUsersByDatasetIdAsync(long datasetId)
+        public async Task<IEnumerable<Friendship>> GetAllFriendshipsByDatasetIdAsync(long datasetId)
+        {
+            return await _context.Friendships.Where(x => !x.IsDeleted && x.DatasetId == datasetId)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<UserAnalyze>> GetAllUniqueUsersWithFriendsCountByDatasetIdAsync(long datasetId)
         {
             var users = await (from UserTbl in (
                    ((
@@ -63,6 +69,12 @@
                          };
 
             return result;
+        }
+
+        public async Task UpdateListOfFriendshipsAsync(IEnumerable<Friendship> friendships)
+        {
+            _context.Friendships.UpdateRange(friendships);
+            await _context.SaveChangesAsync();
         }
     }
 }

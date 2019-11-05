@@ -13,9 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkAnaylser.Core"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkAnaylser.Data", "SocialNetworkAnaylser.Data\SocialNetworkAnaylser.Data.csproj", "{984C5FB0-36F2-4B52-B3FF-EA52B9E301C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkAnalyser.API", "SocialNetworkAnalyser.API\SocialNetworkAnalyser.API.csproj", "{A411C206-9AFF-458A-9646-D1AA56C55A9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkAnalyser.API", "SocialNetworkAnalyser.API\SocialNetworkAnalyser.API.csproj", "{A411C206-9AFF-458A-9646-D1AA56C55A9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkAnalyser.Web.Models", "SocialNetworkAnalyser.Web.Models\SocialNetworkAnalyser.Web.Models.csproj", "{3BF0336E-A0BF-4845-908E-3A99B2AD59BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkAnalyser.Web.Models", "SocialNetworkAnalyser.Web.Models\SocialNetworkAnalyser.Web.Models.csproj", "{3BF0336E-A0BF-4845-908E-3A99B2AD59BD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4-Test", "4-Test", "{AD90C041-3308-4FD9-85DF-0F7745C54A1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkAnalyser.Testing", "SocialNetworkAnalyser.Testing\SocialNetworkAnalyser.Testing.csproj", "{93E9E666-6007-4EF6-A34A-313E72312108}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,10 @@ Global
 		{3BF0336E-A0BF-4845-908E-3A99B2AD59BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BF0336E-A0BF-4845-908E-3A99B2AD59BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BF0336E-A0BF-4845-908E-3A99B2AD59BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93E9E666-6007-4EF6-A34A-313E72312108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93E9E666-6007-4EF6-A34A-313E72312108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93E9E666-6007-4EF6-A34A-313E72312108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93E9E666-6007-4EF6-A34A-313E72312108}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +56,7 @@ Global
 		{984C5FB0-36F2-4B52-B3FF-EA52B9E301C2} = {2B004038-3227-4018-973E-C01045FC4993}
 		{A411C206-9AFF-458A-9646-D1AA56C55A9A} = {0CCFF9D5-B789-4E7B-8C29-EAF1C4C69A63}
 		{3BF0336E-A0BF-4845-908E-3A99B2AD59BD} = {0CCFF9D5-B789-4E7B-8C29-EAF1C4C69A63}
+		{93E9E666-6007-4EF6-A34A-313E72312108} = {AD90C041-3308-4FD9-85DF-0F7745C54A1A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A0529266-D058-4ADB-996E-213DD5857379}
